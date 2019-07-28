@@ -1,0 +1,105 @@
+extends layout
+
+block content
+  // Begin Page Content
+  .container-fluid
+    // Page Heading
+    .d-sm-flex.align-items-center.justify-content-between.mb-4
+      h1.h3.mb-0.text-gray-800 
+    // Content Row
+    .row
+      // Content Column
+      .col-lg-12.mb-4
+        ul#myTab.nav.nav-tabs(role='tablist')
+          li.nav-item
+            a#home-tab.nav-link.active(data-toggle='tab', href='#home', role='tab', aria-controls='home', aria-selected='true') Outworkers
+          li.nav-item
+            a#profile-tab.nav-link(data-toggle='tab', href='#profile', role='tab', aria-controls='profile', aria-selected='false') Repairs
+          li.nav-item
+            a#profile-tab.nav-link(data-toggle='tab', href='#profile', role='tab', aria-controls='customer', aria-selected='false') Customers  
+          li.nav-item
+            a#contact-tab.nav-link(data-toggle='tab', href='#contact', role='tab', aria-controls='contact', aria-selected='false') Reports
+        #myTabContent.tab-content
+          #home.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='home-tab')
+            // Content Row
+            .row
+              // Content Column
+              .col-lg-12.mb-4
+                // DataTales Example
+                .card.shadow.mb-4
+                  .card-header.py-3
+                    h6.m-0.font-weight-bold.text-primary Outworkers
+                  .card-body
+                    .table-responsive
+                      table#dataTable.table.table-bordered(width='100%', cellspacing='15')
+                        thead
+                          tr
+                            th Company Name
+                            th Email
+                            th Phone
+                            th Address
+                            th City
+                            th Postcode 
+
+                        tbody
+                          each outworker, i in outworkers
+                            tr.odd.gradeX
+                              td
+                                a(href="/outworkers/"+outworker._id)=outworker.companyname
+                              td
+                                = outworker.email
+                              td
+                                = outworker.phonenumber.phone
+                              td
+                                = outworker.address.streetaddress
+                              td
+                                = outworker.address.city
+                              td
+                                = outworker.address.postcode
+          #profile.tab-pane.fade(role='tabpanel', aria-labelledby='profile-tab')
+            // Content Row
+            .row
+              // Content Column
+              .col-lg-12.mb-4
+            // DataTales Example
+            .card.shadow.mb-4
+              .card-header.py-3
+                h6.m-0.font-weight-bold.text-primary Repairs
+              .card-body
+                .table-responsive
+                  table#dataTable.table.table-bordered(width='100%', cellspacing='15')
+                    thead
+                      tr
+                        th Ticket No
+                        th Decription
+                        th Category
+                        th Item Storage
+                        th Status
+                    tbody
+                      each repair, i in repairs
+                        tr.odd.gradeX
+                          td
+                            a(href="/repairs/"+ repair._id)=repair.ticketno
+                          td
+                            = repair.decription
+                          td
+                            = repair.category
+                          td
+                            = repair.itemstorage
+                          td
+                            = repair.repairstatus
+
+          #contact.tab-pane.fade(role='tabpanel', aria-labelledby='contact-tab')
+            // Content Row
+            .row
+              // Content Column
+              .col-lg-12.mb-4
+            // DataTales Example
+            .card.shadow.mb-4
+              .card-header.py-3
+                h6.m-0.font-weight-bold.text-primary Reporting
+              .card-body
+                
+                
+      // /.container-fluid
+      // End of Main Content

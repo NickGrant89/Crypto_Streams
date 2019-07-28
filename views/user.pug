@@ -1,0 +1,81 @@
+extends layout
+
+block content
+  // Begin Page Content
+  .container-fluid
+    // Page Heading
+    .d-sm-flex.align-items-center.justify-content-between.mb-4
+      h1.h3.mb-0.text-gray-800 
+      a.d-none.d-sm-inline-block.btn.btn-sm.btn-primary.shadow-sm(href='#editUser', data-toggle='modal', data-target='#editUser')
+        i.fas.fa-download.fa-sm.text-white-50
+        |  Stream Settings
+      // Content Row
+    .row
+      // Content Column
+      .col-lg-12.mb-4
+        .card.shadow.mb-4
+          .card-header.py-3
+            h6.m-0.font-weight-bold.text-primary #{title} Video Options
+          .card-body
+            .row
+              .col-lg-7.mb-2
+                h1 
+                  video-js#my_video_2.vjs-default-skin.vjs-big-play-centered.vjs-16-9(controls='', preload='auto', width='500', height='300', poster='https://stormin.audio/wp-content/uploads/2019/06/Dax.jpg')
+                    source(src='https://rtmp.darkknight.co.uk:8443/' + users.email + '/' + users.streamkey + '/index.m3u8', type='application/x-mpegURL')
+                  script(src='https://unpkg.com/video.js/dist/video.js')
+                  script(src='https://unpkg.com/@videojs/http-streaming/dist/videojs-http-streaming.js')
+                  script.
+                    var player = videojs('my_video_2');
+                    player.play();
+              .col-lg-5.mb-2
+                h1 
+                .table-responsive
+                    table#dataTable.table.table-bordered(width='100%', cellspacing='15')
+                      thead
+                        tr
+                          th Source
+                      tbody
+                        each relays, i in relay
+                          tr.odd.gradeX
+                            td
+                              a(href="/relays/"+relays._id)=relays.name
+    
+  // /.container-fluid
+  // End of Main Content 
+  #editUser.modal.fade(tabindex='-1', role='dialog', aria-labelledby='editUserLabel', aria-hidden='true')
+    .modal-dialog(role='document')
+        .modal-content
+            .modal-header
+                h5#editUserLabel.modal-title Stream Setting
+                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    span(aria-hidden='true')
+            .modal-body
+                form(method='POST', action='/users/edit/streamset/'+users.id)
+                    
+                    #form-group
+                        
+                        label
+                        input(name='hls' type='checkbox', value='true' checked=hls, data-toggle='toggle')
+                        |     HLS
+                    br
+                    #form-group
+                        
+                        label
+                        input(name='dash' type='checkbox', value='true' checked=dash, data-toggle='toggle')
+                        |     DASH
+                    br    
+                    #form-group
+                        
+                        label
+                        input(name='mp4' type='checkbox', value='true' checked=mp4, disabled data-toggle='toggle')
+                        |     MP4
+                    #form-group
+                        label
+                        h5
+                          |     Stream Key -
+                          =users.streamkey 
+                    br      
+                                  
+                                                                          
+                    input.btn.btn-primary(type='submit', value='Submit')
+                    a.btn.btn-danger(href='/users/'+ users._id) Cancel 

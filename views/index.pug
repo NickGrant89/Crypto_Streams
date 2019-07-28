@@ -1,0 +1,93 @@
+extends layout
+
+block content
+  // Begin Page Content
+  .container-fluid
+    // Page Heading
+    .d-sm-flex.align-items-center.justify-content-between.mb-4
+      h1.h3.mb-0.text-gray-800 Dashboard
+    // Content Row
+    .row
+      // Earnings (Monthly) Card Example
+      .col-xl-3.col-md-6.mb-4
+        .card.border-left-primary.shadow.h-100.py-2
+          .card-body
+            .row.no-gutters.align-items-center
+              .col.mr-2
+                .text-xs.font-weight-bold.text-primary.text-uppercase.mb-1 Streams
+                .h5.mb-0.font-weight-bold.text-gray-800 #{numOfRepairs}
+              .col-auto
+                i.fas.fa-wrench.fa-2x.text-gray-300
+      // Earnings (Monthly) Card Example
+      .col-xl-3.col-md-6.mb-4
+        .card.border-left-success.shadow.h-100.py-2
+          .card-body
+            .row.no-gutters.align-items-center
+              .col.mr-2
+                .text-xs.font-weight-bold.text-success.text-uppercase.mb-1 Viewers
+                .h5.mb-0.font-weight-bold.text-gray-800 #{numOfCustomers}
+              .col-auto
+                i.fas.fa-user.fa-2x.text-gray-300
+      // Earnings (Monthly) Card Example
+      .col-xl-3.col-md-6.mb-4
+        .card.border-left-info.shadow.h-100.py-2
+          .card-body
+            .row.no-gutters.align-items-center
+              .col.mr-2
+                .text-xs.font-weight-bold.text-info.text-uppercase.mb-1 ????
+                .row.no-gutters.align-items-center
+                  .col-auto
+                    .h5.mb-0.mr-3.font-weight-bold.text-gray-800 #{numOfOutworkers}
+                  .col
+              .col-auto
+                i.fas.fa-address-book.fa-2x.text-gray-300
+      // Pending Requests Card Example
+      .col-xl-3.col-md-6.mb-4
+        .card.border-left-warning.shadow.h-100.py-2
+          .card-body
+            .row.no-gutters.align-items-center
+              .col.mr-2
+                .text-xs.font-weight-bold.text-warning.text-uppercase.mb-1 Users
+                .h5.mb-0.font-weight-bold.text-gray-800 #{numOfUsers}
+              .col-auto
+                i.fas.fa-users.fa-2x.text-gray-300
+          // End of Main Content
+      // Content Row
+    .row
+      // Content Column
+      .col-lg-12.mb-4
+        // Page Heading
+        
+        // DataTales Example
+        .card.shadow.mb-4
+          .card-header.py-3
+            h6.m-0.font-weight-bold.text-primary Users
+          .card-body
+            .table-responsive
+              table#dataTable.table.table-bordered(width='100%', cellspacing='0')
+                thead
+                 tr
+                    th Name
+                    th Email
+                    th Phone
+                    th Company
+                    th Admin
+                tbody
+                  each user, i in users
+                    tr.odd.gradeX
+                      td
+                        a(href="/users/"+ user._id)=user.name
+                      td
+                        = user.email
+                      td
+                        = user.phone
+                      td
+                        = user.company
+                      td
+                        = user.admin 
+    
+
+                      
+      // /.End of datatable
+  // /.container-fluid
+  // End of Main Content
