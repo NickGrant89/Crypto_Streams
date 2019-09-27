@@ -35,6 +35,8 @@ const ensureAuthenticated = require('./middleware/login-auth')
 
 let User = require('./models/user');
 
+let Post = require('./models/post');
+
 
 
 
@@ -74,11 +76,10 @@ app.use(bodyParser.json())
 
 //Set Public folder
 
-app.use(express.static(path.join(__dirname, 'public')))
-
 app.use(express.static(path.join(__dirname, 'NewSB')))
 
 app.use('/uploads', express.static('uploads'));
+
 
 //Express session Middleware
 
@@ -112,29 +113,19 @@ app.get('*', function(req, res, next){
 //GET display SB Admin page
 
 app.get('/', ensureAuthenticated, function(req, res){
-    User.findById(req.user.id, function(err, user){
-       /*  if(user.admin == 'Super Admin'){
-           return res.redirect('/admin/dashboard')
-        }  */
-        //console.log(user)
+    Post.find({}, function(err, post){
+        if(post == undefined){
 
-        User.find({}, function(err, users){
-            
-                        User.countDocuments({'company': user.company}, function(err, numOfUsers) {
-                            if(err){
-                                console.log(err)
-                            }
-                            else{
-                                res.render('index', {
-                                    title:'Dashboard',
-                                    users:users,
-                                    numOfUsers:numOfUsers,
-                                });
-                            }
-                        });        
-                    });  
-                });
-            });
+            var post = {};
+
+            return post;
+        };
+        res.render('index', {
+            title:'Dashboard',
+            post:post,
+        });
+    });        
+});  
         
 
 
@@ -166,4 +157,4 @@ app.use('/admin', admin);
 
 const port = process.env.Port || 3000;
 
-app.listen(port, process.env.IP || '192.168.178.23', () => console.log('Example app listening on port' + ' ' + port +  '!'))
+app.listen(port, process.env.IP || '127.0.0.1', () => console.log('Example app listening on port' + ' ' + port +  '!'))

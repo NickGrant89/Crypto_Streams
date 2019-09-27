@@ -36,11 +36,11 @@ router.get('/', ensureAuthenticated, function(req, res){
     let user = new User();
   user.admin = 'Admin';
   user.name = 'Nick';
-  user.email = 'nickgrant1989@live.co.uk';
+  user.email = 'jc@jc.com';
   user.company = 'req.body.company';
   user.phone = 'req.body.phone';
   user.username = 'req.body.username';
-  user.password = 'Bea27yee';
+  user.password = 'jtech1234!';
   user.password2 = 'req.body.password2';
 
   //console.log(user);
@@ -74,6 +74,30 @@ router.get('/login', function(req, res){
 })
 
 //login form
+router.get('/register', function(req, res){
+    res.render('register', {title:'Register'});
+
+})
+
+//login form
+router.get('/profile', function(req, res){
+    res.render('profile', {title:'Profile'});
+
+})
+
+//login form
+router.get('/settings', function(req, res){
+    res.render('settings', {title:'Settings'});
+
+})
+
+//login form
+router.get('/go-live', function(req, res){
+    res.render('go-live', {title:'Go Live'});
+
+})
+
+//login form
 router.get('/logout', function(req, res){
     req.logout();
     //req.flash('success', 'You have logged out');
@@ -95,7 +119,6 @@ router.get('/:id', (req, res) => {
         Relay.find(q, function(err, relay){
             Trans.findOne({'user':users.email}, function(err, trans){
             res.render('user', {
-            
                 users:users,
                 title: users.name,
                 trans:trans,
@@ -103,16 +126,12 @@ router.get('/:id', (req, res) => {
                 hls:trans.hls,
                 dash:trans.dash,
                 mp4:trans.mp4,
-  
             }); 
             console.log(users.email)
         });
     });
  });
 });
-
-
-
 
 //Edit User 
 router.post('/edit/:id',  (req, res) => {

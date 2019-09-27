@@ -1,5 +1,3 @@
-
-
 let User = require('../models/user');
 
 let Company = require('../models/company');

@@ -9,6 +9,12 @@ const UserSchema = mongoose.Schema({
     name:{
         type: String
     },
+    nickname:{
+        type:String
+    },
+    dateofbirth:{
+        type: String
+    },
     email:{
         type: String
     },
@@ -18,6 +24,7 @@ const UserSchema = mongoose.Schema({
     password:{
         type: String
     },
+    friends:[],
     streamkey:{type: String},
 });
 
