@@ -11,10 +11,13 @@ html(lang='en')
 		link(href='/vendor/fontawesome-free/css/all.min.css', rel='stylesheet', type='text/css')
 		link(href='https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i', rel='stylesheet')
 		// Custom styles for this template
+		link(href='../packages/core/main.css', rel='stylesheet')
+		link(href='../packages/list/main.css', rel='stylesheet')
 		link(href='/css/sb-admin-2.min.css', rel='stylesheet')
 		link(href='https://fonts.googleapis.com/icon?family=Material+Icons', rel='stylesheet')
 		link(href='https://unpkg.com/video.js/dist/video-js.css', rel='stylesheet')
 		link(href='https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/css/bootstrap4-toggle.min.css', rel='stylesheet')
+		
 	body#page-top
 		// Page Wrapper
 		#wrapper
@@ -25,28 +28,17 @@ html(lang='en')
 					.sidebar-brand-icon.rotate-n-15
 						i.fas.fa-wrench
 					.sidebar-brand-text.mx-3
-						| Streaming Platform
+						| Stormin Audio
 				// Divider
 				hr.sidebar-divider.my-0
 				// Nav Item - Dashboard
 				li.nav-item.active
-					a.nav-link(href='/users/go-live')
+					a.nav-link(href='/')
 						i.fas.fa-fw.fa-tachometer-alt
-						span Go Live
+						span Dashboard
 				// Divider
 				hr.sidebar-divider
-				// Nav Item - Tables
-				li.nav-item
-					a.nav-link(href='tables.html')
-						i.fas.fa-fw.fa-table
-						span News Feed	
-				// Nav Item - Tables
-				li.nav-item
-					a.nav-link(href='tables.html')
-						i.fas.fa-fw.fa-table
-						span Friends					
-				// Divider
-				hr.sidebar-divider
+				
 			// End of Sidebar
 			// Content Wrapper
 			#content-wrapper.d-flex.flex-column
@@ -104,7 +96,7 @@ html(lang='en')
 											.status-indicator.bg-success
 										.font-weight-bold
 											.text-truncate Hi there! I am wondering if you can help me with a problem I've been having.
-											.small.text-gray-500 Emily Fowler · 58m
+											.small.text-gray-500 Emily Fowler · 58m	
 									a.dropdown-item.text-center.small.text-gray-500(href='#') Read More Messages
 							.topbar-divider.d-none.d-sm-block
 
@@ -129,7 +121,7 @@ html(lang='en')
 					// End of Topbar
 					!= messages('message', locals)
 					block content
-	script(src='/js/main.js')
+	
 					// Footer
 					footer.sticky-footer.bg-white
 						.container.my-auto
@@ -163,8 +155,15 @@ html(lang='en')
 				.modal-body
 
 					input.btn.btn-primary(type='submit', value='Submit')
-					a.btn.btn-danger(href='/users/') Cancel 				
-									
+					a.btn.btn-danger(href='/users/') Cancel
+
+					script(src='/socket.io/socket.io.js')
+					script.
+						var socket = io();
+					script(src='../packages/core/main.js')
+					script(src='../packages/list/main.js')
+					script(src='../js/calender.js')
+					script(src='/socket.io/socket.io.js')
 					// Bootstrap core JavaScript
 					script(src='/vendor/jquery/jquery.min.js')
 					script(src='/vendor/bootstrap/js/bootstrap.bundle.min.js')
@@ -173,15 +172,10 @@ html(lang='en')
 					// Custom scripts for all pages
 					script(src='/js/sb-admin-2.min.js')
 					// Page level plugins
-					script(src='/vendor/chart.js/Chart.min.js')
-					// Page level custom scripts
-					script(src='/js/demo/chart-area-demo.js')
-					script(src='/js/go-live.js')
-					script(src='/js/demo/chart-pie-demo.js')
-					// Page level plugins
 					script(src='/vendor/datatables/jquery.dataTables.min.js')
 					script(src='/vendor/datatables/dataTables.bootstrap4.min.js')
 					// Page level custom scripts
 					script(src='/js/demo/datatables-demo.js')
+					script(src='/js/main.js')
 					script(src='https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js')
 								

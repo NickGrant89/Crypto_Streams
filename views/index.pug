@@ -8,20 +8,45 @@ block content
       h1.h3.mb-0.text-gray-800 Dashboard
     // Content Row
     .row
-      each posts, i in post
-        .col-lg-4  
-          // Basic Card Example
-          .card.shadow.mb-4
-            .card-header.py-3
-              h6.m-0.font-weight-bold.text-primary
-                =posts.title
-            .card-body
-              video-js#my_video_2.vjs-default-skin.vjs-big-play-centered.vjs-16-9(controls='', preload='auto', width='500', height='300', poster='https://stormin.audio/wp-content/uploads/2019/06/Dax.jpg')
-                source(src='https://rtmp.darkknight.co.uk:8443/' + users.email + '/' + users.streamkey + '/index.m3u8', type='application/x-mpegURL')
-              script(src='https://unpkg.com/video.js/dist/video.js')
-              script(src='https://unpkg.com/@videojs/http-streaming/dist/videojs-http-streaming.js')
-              script.
-                var player = videojs('my_video_2');
-                player.play();
+      .col-lg-7  
+        // Basic Card Example
+        .card.shadow.mb-4
+          .card-header.py-3
+            h6.m-0.font-weight-bold.text-primary Stream Details
+          .card-body
+            video-js#my_video_2.vjs-default-skin.vjs-big-play-centered.vjs-16-9(controls='', preload='auto', width='500', height='300', poster='')
+              source(src='https://rtmp.darkknight.co.uk:8443/live/' + user.streamkey + '/index.m3u8', type='application/x-mpegURL')
+            script(src='https://unpkg.com/video.js/dist/video.js')
+            script(src='https://unpkg.com/@videojs/http-streaming/dist/videojs-http-streaming.js')
+            script.
+              var player = videojs('my_video_2');
+              player.play();
+      .col-lg-5 
+        // Basic Card Example
+        .card.shadow.mb-4
+          .card-header.py-3
+            h6.m-0.font-weight-bold.text-primary User Details
+          .card-body
+            ul Name:    
+              =user.name
+            ul Email:    
+              =user.email  
+            ul URL:    rtmp://rtmp.darkknight.co.uk/live  
+              
+            ul Stream Key:    
+              =user.streamkey 
+              input.btn.btn-primary.resetstreamkey(data-id=user.id, type='submit', value='Reset Key') 
+            ul Show Time:
+            ul Next Show:
+          input.btn.btn-primary(type='submit', value='Pick Show Time')    
+    // Content Row
+    .row
+      .col-lg-12
+        // Basic Card Example
+        .card.shadow.mb-4
+          .card-header.py-3
+            h6.m-0.font-weight-bold.text-primary Calender
+          .card-body
+            #calendar      
   // /.container-fluid
   // End of Main Content

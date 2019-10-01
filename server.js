@@ -13,32 +13,11 @@ const fs = require('fs');
 
 const helmet = require('helmet');
 
-/* //Write "Hello" every 500 milliseconds:
-var myInt = setInterval(function () {
-    User.find({}, 'stream streamkey facebookkey youtubekey', function(err, users){
-        // write to a new file named 2pac.txt
-        fs.writeFile('./stream.txt', users, (err) => {  
-            // throws an error, you could also catch it here
-            if (err) throw err;
-
-            // success case, the file was saved
-            console.log('Lyric saved!');
-        });
-        //console.log("Hello" + users);
-    });
-    //console.log("Hello");
-}, 5000); */
-
 // This calls the Device model to intergate the DB
 
 const ensureAuthenticated = require('./middleware/login-auth')
 
 let User = require('./models/user');
-
-let Post = require('./models/post');
-
-
-
 
 // Call Moongoose connection
 const mongoose = require('mongoose');
@@ -76,7 +55,7 @@ app.use(bodyParser.json())
 
 //Set Public folder
 
-app.use(express.static(path.join(__dirname, 'NewSB')))
+app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/uploads', express.static('uploads'));
 
@@ -113,19 +92,13 @@ app.get('*', function(req, res, next){
 //GET display SB Admin page
 
 app.get('/', ensureAuthenticated, function(req, res){
-    Post.find({}, function(err, post){
-        if(post == undefined){
-
-            var post = {};
-
-            return post;
-        };
+    
         res.render('index', {
             title:'Dashboard',
-            post:post,
+ 
         });
     });        
-});  
+
         
 
 
@@ -135,25 +108,29 @@ app.get('/', ensureAuthenticated, function(req, res){
 //API Routes
 
 let users = require('./routes/users');
-let relays = require('./routes/relays');
 
 
-//Display Routes
-
-
-let admin = require('./routes/admin');
-
+//Display Routess
 
 app.use('/users', users);
-app.use('/relays', relays);
-
-
-app.use('/admin', admin);
 
 /* app.use('*', function(req, res) {
     res.status(404).end();
     res.redirect('/');
 });  */
+
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+io.on('connection', function(socket){
+    socket.on('chat message', function(msg){
+      io.emit('chat message', msg);
+    });
+  });
+
+http.listen(3000, function() {
+    console.log('listening on localhost:3001');
+ });
 
 const port = process.env.Port || 3000;
 

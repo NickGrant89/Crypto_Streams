@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const multer = require('multer');
+const shortid = require('shortid');
 //const upload = multer({dest: '/uploads/'});
 
 //Passport Config
@@ -13,12 +14,6 @@ const ensureAuthenticated = require('../middleware/login-auth');
 
 //Bring in Users Model
 let User = require('../models/user');
-
-let Trans = require('../models/trans');
-
-let Relay = require('../models/relay');
-
-
 
 //Get all users
 router.get('/', ensureAuthenticated, function(req, res){        
@@ -163,6 +158,32 @@ router.post('/edit/:id',  (req, res) => {
  });
 });
 
+//Edit User 
+router.post('/streamkey/:id',  (req, res) => {
+    
+    User.findById(req.params.id, function(err, users){ 
+        console.log(users);
+    let user = {};
+    user.name = users.name;
+    user.email = users.email;
+    user.streamkey = shortid.generate();
+  
+    let query = {_id:req.params.id}
+
+    User.updateOne(query, user, function(err){
+         if(err){
+             console.log(err);
+             return;
+         }
+         else{
+             res.redirect('/')
+             
+         }
+    });
+    console.log()
+ });
+});
+
 //Edit Stream Settings User 
 router.post('/edit/streamset/:id',  (req, res) => {
     
@@ -244,7 +265,8 @@ router.post('/register', [
   user.username = req.body.username;
   user.password = req.body.password;
   user.password2 = req.body.password2;
-  user.streamkey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  //user.streamkey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  user.streamkey = shortid.generate();
 
   let trans = new Trans();
     trans.app = 'false';
