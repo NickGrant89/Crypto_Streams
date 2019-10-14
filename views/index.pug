@@ -12,15 +12,25 @@ block content
         // Basic Card Example
         .card.shadow.mb-4
           .card-header.py-3
-            h6.m-0.font-weight-bold.text-primary Stream Details
+            h6.m-0.font-weight-bold.text-primary Video
           .card-body
             video-js#my_video_2.vjs-default-skin.vjs-big-play-centered.vjs-16-9(controls='', preload='auto', width='500', height='300', poster='')
-              source(src='https://rtmp.darkknight.co.uk:8443/live/' + user.streamkey + '/index.m3u8', type='application/x-mpegURL')
+              source(src='http://rtmp.darkknight.co.uk:8888/live/' + user.streamkey + '/index.m3u8', type='application/x-mpegURL')
             script(src='https://unpkg.com/video.js/dist/video.js')
             script(src='https://unpkg.com/@videojs/http-streaming/dist/videojs-http-streaming.js')
             script.
               var player = videojs('my_video_2');
+              player.on('error', function(err) {
+              if(err){
+              //alert("I am an alert box!");
+              player.src({ type: "video/mp4", src: "http://rtmp.darkknight.co.uk/2019-07-12-22-57.mp4" });
+              player.load();
               player.play();
+              }
+              else{
+              player.play();
+              }
+              })
       .col-lg-5 
         // Basic Card Example
         .card.shadow.mb-4
@@ -35,10 +45,13 @@ block content
               
             ul Stream Key:    
               =user.streamkey 
-              input.btn.btn-primary.resetstreamkey(data-id=user.id, type='submit', value='Reset Key') 
+              |     
+              input.btn-primary.resetstreamkey(data-id=user.id, type='submit', value='Reset Key') 
             ul Show Time:
             ul Next Show:
-          input.btn.btn-primary(type='submit', value='Pick Show Time')    
+          input.btn.btn-primary(href='#addUser', data-toggle='modal', data-target='#addUser' value='Show Time' disabled hidden)   
+          input.btn.btn-primary(href='#fbLive', data-toggle='modal', data-target='#fbLive' value='Facebook Live')   
+          br 
     // Content Row
     .row
       .col-lg-12
@@ -50,3 +63,57 @@ block content
             #calendar      
   // /.container-fluid
   // End of Main Content
+  #fbLive.modal.fade(tabindex='-1', role='dialog', aria-labelledby='fbLiveLabel', aria-hidden='true')
+      .modal-dialog(role='document')
+          .modal-content
+              .modal-header
+                  h5#fbLiveLabel.modal-title Facebook Live
+                  button.close(type='button', data-dismiss='modal', aria-label='Close')
+                      span(aria-hidden='true')
+              .modal-body
+                  form(method='POST', action='/users/register')   
+                      #form-group
+                          label Facebook Stream Key:
+                          input.form-control( name='fbStreamkey', type='text' id="fbStreamkey")
+                      #form-group
+                          input.form-control(hidden name='streamkey', type='text' id="streamkey" value=user.streamkey)    
+                          br
+                      input.btn.btn-primary.fbLive(type='submit', value='Submit')
+                      a.btn.btn-danger(href='/') Cancel   
+  #addUser.modal.fade(tabindex='-1', role='dialog', aria-labelledby='addUserLabel', aria-hidden='true')
+      .modal-dialog(role='document')
+          .modal-content
+              .modal-header
+                  h5#addUserLabel.modal-title Pick a Show Time
+                  button.close(type='button', data-dismiss='modal', aria-label='Close')
+                      span(aria-hidden='true')
+              .modal-body
+                  form()   
+                      #form-group
+                        label Days:
+                          select.form-control(name='admin', type='text')
+                              option Monday
+                              option Tuesday
+                              option Wednesday
+                              option Thursday
+                              option Friday
+                              option Saturday
+                              option Sunday
+                      #form-group
+                        label Times:
+                          select.form-control(name='admin', type='text')
+                              option 00:00
+                              option 02:00
+                              option 04:00
+                              option 06:00
+                              option 08:00
+                              option 10:00
+                              option 12:00 
+                              option 14:00
+                              option 16:00
+                              option 18:00
+                              option 20:00
+                              option 22:00
+                          br
+                      input.btn.btn-primary(type='submit', value='Submit')
+                      a.btn.btn-danger(href='/users') Cancel   

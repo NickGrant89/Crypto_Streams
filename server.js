@@ -1,7 +1,6 @@
 //Using modual
 
 const morgan = require('morgan'); // Console Logger
-const Joi = require('joi');  // Joi is a validator, making code smaller//
 const express = require('express'); // Express Framework
 const path = require('path');
 const bodyParser = require('body-parser')
@@ -9,7 +8,6 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const config = require('./config/database')
 const passport = require('passport');
-const fs = require('fs');
 
 const helmet = require('helmet');
 
@@ -92,45 +90,31 @@ app.get('*', function(req, res, next){
 //GET display SB Admin page
 
 app.get('/', ensureAuthenticated, function(req, res){
-    
+    User.findById(req.user.id, function(err, user){
         res.render('index', {
             title:'Dashboard',
- 
+            user:user,
         });
-    });        
-
-        
-
-
+    }); 
+});            
 
 // Route File
 
 //API Routes
 
 let users = require('./routes/users');
-
+let auth = require('./routes/apiJWT');
 
 //Display Routess
 
 app.use('/users', users);
+app.use('/auth', auth);
 
 /* app.use('*', function(req, res) {
     res.status(404).end();
     res.redirect('/');
 });  */
 
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-
-io.on('connection', function(socket){
-    socket.on('chat message', function(msg){
-      io.emit('chat message', msg);
-    });
-  });
-
-http.listen(3000, function() {
-    console.log('listening on localhost:3001');
- });
 
 const port = process.env.Port || 3000;
 

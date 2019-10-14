@@ -14,6 +14,7 @@ const CalenderSchema = mongoose.Schema({
     end:{
         type:String
     },
+    dayoftheweek:{type:String},
     url:{type:String},
     live:{type:Boolean},
 });
