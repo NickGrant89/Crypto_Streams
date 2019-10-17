@@ -26,6 +26,8 @@ const UserSchema = mongoose.Schema({
     },
     friends:[],
     streamkey:{type: String},
+    createdate:{type: String},
+    
 });
 
 

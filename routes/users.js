@@ -12,6 +12,8 @@ require('../config/passport')(passport);
 
 const ensureAuthenticated = require('../middleware/login-auth');
 
+const checkEmail = require('../middleware/check-email');
+
 //Bring in Users Model
 let User = require('../models/user');
 
@@ -64,7 +66,7 @@ router.get('/', ensureAuthenticated, function(req, res){
 
 //login form
 router.get('/login', function(req, res){
-    res.render('login', {title:'Login'});
+    res.render('login1', {title:'Login'});
 
 })
 
@@ -222,20 +224,20 @@ router.post('/edit/streamset/:id',  (req, res) => {
 // ...rest of the initial code omitted for simplicity.
 const { check, validationResult } = require('express-validator/check');
 
-router.post('/register', [
+router.post('/register', checkEmail, [
 
     //Name
     check('name').isLength({min:3}).trim().withMessage('Name required'),
     //Company
-    //check('company').isLength({min:1}).trim().withMessage('Company required'),
+    //check('nickname').isLength({min:3}).trim().withMessage('Company required'),
     //Company
-    check('phone').isLength({min:1}).trim().withMessage('Phone Number required'),
+    check('phone').isLength({min:11}).trim().withMessage('Phone Number required'),
     //Username
-    //check('username').isLength({ min: 1}),
+    check('dateofbirth').isLength({ min: 6}).trim().withMessage('Date Of Birth required'),
     // username must be an email
-    //check('email').isEmail(),
+    check('email').isEmail().trim().withMessage('Email required'),
     // password must be at least 5 chars long
-    check('password').isLength({ min: 8 }),
+    check('password').isLength({ min: 8 }).trim().withMessage('Password required'),
 
     //check('password2').equals('password')
 ], (req, res) => {
@@ -244,12 +246,20 @@ router.post('/register', [
   // Finds the validation errors in this request and wraps them in an object with handy functions
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    req.flash('danger', 'Please try again' ,{errors:errors.mapped()} );
-    res.redirect('/users');
 
+    var errorsArray = errors.array();
+    var errorsArray1 = [];
+    console.log(errorsArray);
     //res.render('register',)
+    errorsArray.forEach(errorss => {
+        errorsArray1.push(errorss.msg);
+    });
+    console.log(errorsArray1);
+    req.flash('danger', 'Please try again' ,{error:errorsArray1} );
+    res.redirect('/users/register');
+    
 
-   return { errors: errors.mapped() };
+   return { error: errorsArray1 };
   }
   if(req.body.password !== req.body.password2) {
     req.flash('danger' , ('Password confirmation does not match password'));
@@ -258,74 +268,16 @@ router.post('/register', [
     }
 
   let user = new User();
-  user.admin = req.body.admin;
+  user.admin = 'User';
   user.name = req.body.name;
+  user.nickname = req.body.nickname;
+  user.dateofbirth = req.body.dateofbirth;
   user.email = req.body.email;
   user.phone = req.body.phone;
-  user.username = req.body.username;
   user.password = req.body.password;
   user.password2 = req.body.password2;
-  //user.streamkey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
   user.streamkey = shortid.generate();
-
-  let trans = new Trans();
-    trans.app = 'false';
-    trans.hls = 'true';
-    trans.hlsFlags ='[hls_time=2:hls_list_size=3:hls_flags=delete_segments]';
-    trans.dash = 'true';
-    trans.dashFlags = '[f=dash:window_size=3:extra_window_size=5]';
-    trans.mp4 = 'false';
-    trans.mp4Flags = '[movflags=faststart]';
-    trans.user = req.body.email;
-  console.log(trans);
-  trans.save(function(err){
-    if(errors){
-        console.log(err);
-        return;
-    }else{
-        //eq.flash('success', 'You are now registered');
-        //res.redirect('/users');
-    }
-});
-
-  let facebook = new Relay();
-    facebook.name = 'Facebook';
-    facebook.switch = req.body.switch;
-    facebook.datetime = Date.now();
-    facebook.app = req.body.email;
-    facebook.mode = "push";
-    facebook.edge = 'rtmps://live-api-s.facebook.com:443/rtmp/';
-    facebook.user = req.body.email;
-
-    facebook.save(function(err){
-        if(err){
-            console.log(err);
-            return;
-        }else{
-            //eq.flash('success', 'You are now registered');
-            //res.redirect('/users');
-        }
-    });
-
-    let youtube = new Relay();
-    youtube.name = 'Youtube';
-    youtube.switch = req.body.switch;
-    youtube.datetime = Date.now();
-    youtube.app = req.body.email;
-    youtube.mode = "push";
-    youtube.edge = 'rtmp://a.rtmp.youtube.com/live2/';
-    youtube.user = req.body.email;
-
-    youtube.save(function(err){
-        if(err){
-            console.log(err);
-            return;
-        }else{
-            //eq.flash('success', 'You are now registered');
-            //res.redirect('/users');
-        }
-    });
-    console.log(facebook, youtube);
+  user.createdate = Date.now();
 
   bcrypt.genSalt(10, function(errors, salt){
         bcrypt.hash(user.password, salt, function(err, hash){
@@ -341,7 +293,7 @@ router.post('/register', [
                         return;
                     }else{
                         req.flash('success', 'You are now registered');
-                        res.redirect('/users');
+                        res.redirect('/');
                     }
                 });
             }

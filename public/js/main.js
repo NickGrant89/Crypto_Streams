@@ -41,11 +41,11 @@ $(document).ready(function(){
           $.ajax({
               type:'POST',
               data: dataJson,
-              url: 'http://rtmp.darkknight.co.uk:8888/api/relay/push/',
+              url: 'http://rtmp.darkknight.co.uk:8888/api/relay/push',
               dataType: "json",
               contentType: "application/json",
               success: function(response,){
-               window.location.href='/'
+               //window.location.href='/'
               },
               error: function(err){
                      console.log(err); 
@@ -58,19 +58,4 @@ $(document).ready(function(){
       }
 
   });
-});
-
-$(document).ready(function(){
-    $(function () {
-        var socket = io();
-        $('form').submit(function(e){
-          e.preventDefault(); // prevents page reloading
-          socket.emit('chat message', $('#m').val());
-          $('#m').val('');
-          return false;
-        });
-        socket.on('chat message', function(msg){
-          $('#messages').append($('<li>').text(msg));
-        });
-      });
 });

@@ -71,15 +71,15 @@ block content
                   button.close(type='button', data-dismiss='modal', aria-label='Close')
                       span(aria-hidden='true')
               .modal-body
-                  form(method='POST', action='/users/register')   
-                      #form-group
-                          label Facebook Stream Key:
-                          input.form-control( name='fbStreamkey', type='text' id="fbStreamkey")
-                      #form-group
-                          input.form-control(hidden name='streamkey', type='text' id="streamkey" value=user.streamkey)    
-                          br
-                      input.btn.btn-primary.fbLive(type='submit', value='Submit')
-                      a.btn.btn-danger(href='/') Cancel   
+                  form
+                    #form-group
+                        label Facebook Stream Key:
+                        input.form-control(type='text' id="fbStreamkey")
+                    #form-group
+                        input.form-control(hidden type='text' id="streamkey" value=user.streamkey)    
+                        br
+                    input.btn.btn-primary.fbLive(type='button', value='Submit')
+                    a.btn.btn-danger(href='/') Cancel   
   #addUser.modal.fade(tabindex='-1', role='dialog', aria-labelledby='addUserLabel', aria-hidden='true')
       .modal-dialog(role='document')
           .modal-content

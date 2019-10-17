@@ -110,10 +110,10 @@ let auth = require('./routes/apiJWT');
 app.use('/users', users);
 app.use('/auth', auth);
 
-/* app.use('*', function(req, res) {
+app.use('*', function(req, res) {
     res.status(404).end();
     res.redirect('/');
-});  */
+}); 
 
 
 const port = process.env.Port || 3000;
