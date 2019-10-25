@@ -19,7 +19,7 @@ let User = require('./models/user');
 
 // Call Moongoose connection
 const mongoose = require('mongoose');
-mongoose.connect(config.database,{ useNewUrlParser: true });
+mongoose.connect(config.database,{ useNewUrlParser: true, useUnifiedTopology: true  });
 
 // Starting DB connection
 

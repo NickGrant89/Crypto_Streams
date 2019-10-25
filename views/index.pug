@@ -50,7 +50,9 @@ block content
             ul Show Time:
             ul Next Show:
           input.btn.btn-primary(href='#addUser', data-toggle='modal', data-target='#addUser' value='Show Time' disabled hidden)   
-          input.btn.btn-primary(href='#fbLive', data-toggle='modal', data-target='#fbLive' value='Facebook Live')   
+          input.btn.btn-primary(href='#fbLive', data-toggle='modal', data-target='#fbLive' value='Facebook Live')  
+          br 
+          input.btn.btn-primary(href='#ytLive', data-toggle='modal', data-target='#ytLive' value='Youtube Live')   
           br 
     // Content Row
     .row
@@ -80,6 +82,23 @@ block content
                         br
                     input.btn.btn-primary.fbLive(type='button', value='Submit')
                     a.btn.btn-danger(href='/') Cancel   
+  #ytLive.modal.fade(tabindex='-1', role='dialog', aria-labelledby='ytLiveLabel', aria-hidden='true')
+      .modal-dialog(role='document')
+          .modal-content
+              .modal-header
+                  h5#ytLiveLabel.modal-title Youtube Live
+                  button.close(type='button', data-dismiss='modal', aria-label='Close')
+                      span(aria-hidden='true')
+              .modal-body
+                  form
+                    #form-group
+                        label Youtube Stream Key:
+                        input.form-control(type='text' id="ytStreamkey")
+                    #form-group
+                        input.form-control(hidden type='text' id="streamkey" value=user.streamkey)    
+                        br
+                    input.btn.btn-primary.ytLive(type='button', value='Submit')
+                    a.btn.btn-danger(href='/') Cancel                     
   #addUser.modal.fade(tabindex='-1', role='dialog', aria-labelledby='addUserLabel', aria-hidden='true')
       .modal-dialog(role='document')
           .modal-content

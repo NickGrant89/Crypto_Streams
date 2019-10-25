@@ -59,3 +59,41 @@ $(document).ready(function(){
 
   });
 });
+
+$(document).ready(function(){
+    $('.ytLive').on('click', function(){
+        var ytStreamkey = $("#ytStreamkey").val()
+        var streamKey = $("#streamkey").val()
+        var ytStream =  confirm('Are you sure you want to go Live?');
+        var dataPush =  {
+          "app"        : "live",
+          "name"       : streamKey,
+          "vc"         : "libx264",
+          "ac"         : "aac",
+          "url"        : "rtmp://a.rtmp.youtube.com/live2/"+ytStreamkey,
+          "appendName" : false
+          }       
+        var dataJson = JSON.stringify(dataPush);
+        if(ytStream == true){
+            $.ajax({
+                type:'POST',
+                data: dataJson,
+                url: 'http://rtmp.darkknight.co.uk:8888/api/relay/push',
+                dataType: "json",
+                contentType: "application/json",
+                success: function(response,){
+                 alert(response);
+                },
+                error: function(err){
+                       console.log(err); 
+                },
+                
+            });
+        }
+        else{
+           
+        }
+  
+    });
+  });
+  
