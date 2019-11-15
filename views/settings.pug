@@ -1,0 +1,49 @@
+extends layout
+
+block content
+  // Begin Page Content
+  .container-fluid
+    // Page Heading
+    
+      // Content Row
+    .row
+      // Content Column
+      .col-lg-12.mb-4
+        .card.shadow.mb-4
+          .card-header.py-3
+            h6.m-0.font-weight-bold.text-primary Settings
+          .card-body
+            ul.list-group
+              each relay, i in relays
+                li.list-group-item 
+                  = relay.name
+                  |   -   
+                  = relay.streamurl
+          
+                  .btn.btn-primary.editDest(href='#editDest', data-toggle='modal', data-target='#editDest' data-id=relay._id)  Edit
+                  .btn.btn-danger.delDest(href='', data-toggle='modal', data-id=relay._id )  Delete
+
+            
+
+  // /.container-fluid
+  // End of Main Content
+  #editDest.modal.fade(tabindex='-1', role='dialog', aria-labelledby='editDestLabel', aria-hidden='true')
+      .modal-dialog(role='document')
+          .modal-content
+              .modal-header
+                  h5#editDestLabel.modal-title Edit Destination
+                  button.close(type='button', data-dismiss='modal', aria-label='Close')
+                      span(aria-hidden='true')
+              .modal-body
+                  form
+                    #form-group
+                        label Name:
+                        input.form-control(type='text' id="name")
+                    #form-group
+                        label Stream URL:
+                        input.form-control(type='text' id="streamUrl")
+                    #form-group
+                        input.form-control(hidden type='text' id="relayId")    
+                        br
+                    input.btn.btn-primary.saveDest(type='button', value='Submit')
+                    a.btn.btn-danger(href='/') Cancel

@@ -6,7 +6,7 @@ html(lang='en')
 		meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
 		meta(name='description', content='')
 		meta(name='author', content='')
-		title Streaming Dashboard
+		title My Streams Dashboard
 		// Custom fonts for this template
 		link(href='/vendor/fontawesome-free/css/all.min.css', rel='stylesheet', type='text/css')
 		link(href='https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i', rel='stylesheet')
@@ -26,9 +26,9 @@ html(lang='en')
 				// Sidebar - Brand
 				a.sidebar-brand.d-flex.align-items-center.justify-content-center(href='/')
 					.sidebar-brand-icon.rotate-n-15
-						i.fas.fa-wrench
+						i.fas.fa-camera
 					.sidebar-brand-text.mx-3
-						| Stormin Audio
+						| My Streams
 				// Divider
 				hr.sidebar-divider.my-0
 				// Nav Item - Dashboard
@@ -68,37 +68,24 @@ html(lang='en')
 								a#alertsDropdown.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
 									i.fas.fa-bell.fa-fw
 									// Counter - Alerts
-									span.badge.badge-danger.badge-counter 1+
+									span.badge.badge-danger.badge-counter 
+										= notificationcount
 								// Dropdown - Alerts
 								.dropdown-list.dropdown-menu.dropdown-menu-right.shadow.animated--grow-in(aria-labelledby='alertsDropdown')
 									h6.dropdown-header Alerts Center
-									a.dropdown-item.d-flex.align-items-center(href='#')
-										.mr-3
-											.icon-circle.bg-primary
-												i.fas.fa-file-alt.text-white
-										div
-											.small.text-gray-500 December 12, 2019
-											span.font-weight-bold A new monthly report is ready to download!
-									
-									a.dropdown-item.text-center.small.text-gray-500(href='#') Show All Alerts
-							// Nav Item - Messages
-							li.nav-item.dropdown.no-arrow.mx-1
-								a#messagesDropdown.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-									i.fas.fa-envelope.fa-fw
-									// Counter - Messages
-									span.badge.badge-danger.badge-counter 1
-								// Dropdown - Messages
-								.dropdown-list.dropdown-menu.dropdown-menu-right.shadow.animated--grow-in(aria-labelledby='messagesDropdown')
-									h6.dropdown-header Message Center
-									a.dropdown-item.d-flex.align-items-center(href='#')
-										.dropdown-list-image.mr-3
-											img.rounded-circle(src='https://source.unsplash.com/fn_BT9fwg_E/60x60', alt='')
-											.status-indicator.bg-success
-										.font-weight-bold
-											.text-truncate Hi there! I am wondering if you can help me with a problem I've been having.
-											.small.text-gray-500 Emily Fowler · 58m	
-									a.dropdown-item.text-center.small.text-gray-500(href='#') Read More Messages
-							.topbar-divider.d-none.d-sm-block
+									each not, i in notification
+										a.dropdown-item.d-flex.align-items-center(href='#')
+											.mr-3
+												.icon-circle.bg-primary
+													i.fas.fa-file-alt.text-white
+											div
+												.small.text-gray-500 
+													= not.datecreated
+												span.font-weight-bold 
+													= not.notification
+									a.dropdown-item.text-center.small.text-gray-500(href='/users/notifications') Show All Alerts
+									a.dropdown-item.text-center.small.text-gray-500.delAllAlert( data-id=user._id) Clear All Alerts
+							
 
 					
 							// Nav Item - User Information
@@ -108,7 +95,7 @@ html(lang='en')
 									img.img-profile.rounded-circle(src='#')
 								// Dropdown - User Information
 								.dropdown-menu.dropdown-menu-right.shadow.animated--grow-in(aria-labelledby='userDropdown')
-									a.dropdown-item(href='/users/'+user.id)
+									a.dropdown-item(href='/users/'+users.id)
 										i.fas.fa-user.fa-sm.fa-fw.mr-2.text-gray-400
 										|  Profile
 									a.dropdown-item(href='/users/settings')
@@ -126,7 +113,7 @@ html(lang='en')
 					footer.sticky-footer.bg-white
 						.container.my-auto
 						.copyright.text-center.my-auto
-							span Copyright © portal.darkknight.co.uk 2019	
+							span Copyright © portal.mystreams.co.uk 2019	
 					// End of Footer
 					// End of Content Wrapper
 					// End of Page Wrapper
@@ -159,7 +146,6 @@ html(lang='en')
 
 					script(src='../packages/core/main.js')
 					script(src='../packages/list/main.js')
-					script(src='../js/calender.js')
 					// Bootstrap core JavaScript
 					script(src='/vendor/jquery/jquery.min.js')
 					script(src='/vendor/bootstrap/js/bootstrap.bundle.min.js')

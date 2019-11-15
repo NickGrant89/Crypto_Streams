@@ -17,6 +17,10 @@ const checkEmail = require('../middleware/check-email');
 //Bring in Users Model
 let User = require('../models/user');
 
+let Notification = require('../models/notifications');
+
+let Relay = require('../models/relay');
+
 //Get all users
 router.get('/', ensureAuthenticated, function(req, res){        
     User.find({}, function(err, users){
@@ -70,6 +74,27 @@ router.get('/login', function(req, res){
 
 })
 
+router.delete('/deletealerts/:id' , ensureAuthenticated, (req, res) => {
+
+    let query = {user:req.params.id}
+    console.log(query);
+
+    Notification.deleteMany(query, function(err){
+         if(err){
+             console.log(err);
+             return;
+         }
+         else{
+             //res.redirect('/')
+             //res.send('200');
+             res.send('Success');
+             
+         }
+    });
+    console.log()
+
+});
+
 //login form
 router.get('/register', function(req, res){
     res.render('register', {title:'Register'});
@@ -77,22 +102,64 @@ router.get('/register', function(req, res){
 })
 
 //login form
-router.get('/profile', function(req, res){
-    res.render('profile', {title:'Profile'});
+router.get('/notifications', function(req, res){
+    User.findById(req.user.id, function(err, users){
+        Notification.find({'user': users._id}, function(err, notification){
+            Notification.count({'user': users._id}, function(err, notificationcount){
+    res.render('notifications', 
+    {title:'notifications', users:users, notification:notification,
+    notificationcount:notificationcount, });
 
-})
+});
+});
+});
+});
+
 
 //login form
-router.get('/settings', function(req, res){
-    res.render('settings', {title:'Settings'});
+router.get('/settings', ensureAuthenticated, function(req, res){
+    User.findById(req.user.id, function(err, users){
+        Notification.find({'user': users._id}, function(err, notification){
+            Notification.count({'user': users._id}, function(err, notificationcount){
+                Relay.find({'user': users._id}, function(err, relays){
+    res.render('settings', {title:'Settings', users:users, notification:notification,
 
-})
+    notificationcount:notificationcount,relays:relays });
 
-//login form
-router.get('/go-live', function(req, res){
-    res.render('go-live', {title:'Go Live'});
+});
+});
+});
+});
+});
 
-})
+//single relay
+router.get('/relay/:id', ensureAuthenticated, function(req, res){
+    Relay.findById(req.params.id, function(err, relay){
+        //console.log(req.params.id);
+        res.json(relay);
+        console.log(relay);
+    });
+});
+
+router.delete('/relay/delete/:id' , ensureAuthenticated, (req, res) => {
+
+    let query = {_id:req.params.id}
+    console.log(query);
+
+    Relay.deleteOne(query, function(err){
+         if(err){
+             console.log(err);
+             return;
+         }
+         else{
+             //res.redirect('/')
+             //res.send('200');
+             res.sendStatus(200);
+         }
+    });
+    console.log()
+
+});
 
 //login form
 router.get('/logout', function(req, res){
@@ -110,25 +177,22 @@ router.post('/login', function(req, res, next){
     })(req, res, next);
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', ensureAuthenticated, (req, res) => {
     User.findById(req.params.id, function(err, users){
-        const q = {'user': users.email} 
-        Relay.find(q, function(err, relay){
-            Trans.findOne({'user':users.email}, function(err, trans){
-            res.render('user', {
-                users:users,
-                title: users.name,
-                trans:trans,
-                relay:relay,
-                hls:trans.hls,
-                dash:trans.dash,
-                mp4:trans.mp4,
-            }); 
-            console.log(users.email)
+        Notification.find({'user': users._id}, function(err, notification){
+            Notification.count({'user': users._id}, function(err, notificationcount){
+                res.render('user', {
+                    users:users,
+                    title: users.name,
+                    notification:notification,
+                    notificationcount:notificationcount, 
+                }); 
+                //console.log(users.email)
+            });
         });
     });
- });
 });
+
 
 //Edit User 
 router.post('/edit/:id',  (req, res) => {
@@ -161,7 +225,7 @@ router.post('/edit/:id',  (req, res) => {
 });
 
 //Edit User 
-router.post('/streamkey/:id',  (req, res) => {
+router.post('/streamkey/:id', ensureAuthenticated, (req, res) => {
     
     User.findById(req.params.id, function(err, users){ 
         console.log(users);
@@ -178,7 +242,8 @@ router.post('/streamkey/:id',  (req, res) => {
              return;
          }
          else{
-             res.redirect('/')
+             //res.redirect('/')
+             res.send('Success');
              
          }
     });
@@ -186,38 +251,31 @@ router.post('/streamkey/:id',  (req, res) => {
  });
 });
 
-//Edit Stream Settings User 
-router.post('/edit/streamset/:id',  (req, res) => {
+router.post('/addDest', ensureAuthenticated, (req, res) => {
     
-    User.findById(req.params.id, function(err, users){ 
-        console.log(req.body);
+    User.findOne({user:req.params.streamkey}, function(err, users){ 
+        console.log(users);
 
-     //console.log(hello(device));
-     let trans = {};
-            trans.app = users.email, 
-            trans.hls = req.body.hls,
-            trans.hlsFlags ='[hls_time=2:hls_list_size=3:hls_flags=delete_segments]',
-            trans.dash = req.body.dash,
-            trans.dashFlags = '[f=dash:window_size=3:extra_window_size=5]',
-            trans.mp4 = req.body.mp4,
-            trans.mp4Flags = '[movflags=faststart]',
-            trans.updatedtime = Date.now();
-        
-   //console.log(trans);
-     let query = {'user': users.email}
-     //console.log(query);
-    Trans.updateMany(query, trans, function(err){
+    let relay = new Relay();
+    relay.user = users._id;
+    relay.name = req.body.name;
+    relay.streamurl = req.body.streamurl;
+
+  
+    let query = {_id:req.params.id}
+
+    relay.save(function(err){
          if(err){
              console.log(err);
              return;
          }
          else{
-             res.redirect('/')
+             //res.redirect('/')
+             res.send('Success');
              
          }
-    }); 
-   
-    //console.log(users.trans)
+    });
+    console.log()
  });
 });
 
@@ -227,13 +285,9 @@ const { check, validationResult } = require('express-validator/check');
 router.post('/register', checkEmail, [
 
     //Name
-    check('name').isLength({min:3}).trim().withMessage('Name required'),
+    check('firstname').isLength({min:2}).trim().withMessage('Name required'),
     //Company
-    //check('nickname').isLength({min:3}).trim().withMessage('Company required'),
-    //Company
-    check('phone').isLength({min:11}).trim().withMessage('Phone Number required'),
-    //Username
-    check('dateofbirth').isLength({ min: 6}).trim().withMessage('Date Of Birth required'),
+    check('lastname').isLength({min:2}).trim().withMessage('Last name required'),
     // username must be an email
     check('email').isEmail().trim().withMessage('Email required'),
     // password must be at least 5 chars long
@@ -269,11 +323,9 @@ router.post('/register', checkEmail, [
 
   let user = new User();
   user.admin = 'User';
-  user.name = req.body.name;
-  user.nickname = req.body.nickname;
-  user.dateofbirth = req.body.dateofbirth;
+  user.firstname = req.body.firstname;
+  user.lastname = req.body.lastname
   user.email = req.body.email;
-  user.phone = req.body.phone;
   user.password = req.body.password;
   user.password2 = req.body.password2;
   user.streamkey = shortid.generate();

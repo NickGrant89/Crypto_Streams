@@ -17,6 +17,10 @@ const ensureAuthenticated = require('./middleware/login-auth')
 
 let User = require('./models/user');
 
+let Notification = require('./models/notifications');
+
+let Relay = require('./models/relay');
+
 // Call Moongoose connection
 const mongoose = require('mongoose');
 mongoose.connect(config.database,{ useNewUrlParser: true, useUnifiedTopology: true  });
@@ -90,24 +94,34 @@ app.get('*', function(req, res, next){
 //GET display SB Admin page
 
 app.get('/', ensureAuthenticated, function(req, res){
-    User.findById(req.user.id, function(err, user){
+    User.findById(req.user.id, function(err, users){
+        Notification.find({'user': users._id}, function(err, notification){
+            Notification.count({'user': users._id}, function(err, notificationcount){
+                Relay.find({'user': users._id}, function(err, relays){
         res.render('index', {
             title:'Dashboard',
-            user:user,
+            users:users,
+            notification:notification,
+            notificationcount:notificationcount,
+            relays:relays,
         });
-    }); 
+    });
+}); 
+}); 
 });            
+});            
+
 
 // Route File
 
-//API Routes
-
 let users = require('./routes/users');
+let relays = require('./routes/relays');
 let auth = require('./routes/apiJWT');
 
 //Display Routess
 
 app.use('/users', users);
+app.use('/relays', relays);
 app.use('/auth', auth);
 
 app.use('*', function(req, res) {
@@ -118,4 +132,4 @@ app.use('*', function(req, res) {
 
 const port = process.env.Port || 3000;
 
-app.listen(port, process.env.IP || '127.0.0.1', () => console.log('Example app listening on port' + ' ' + port +  '!'))
+app.listen(port, process.env.IP || '192.168.178.23', () => console.log('Example app listening on port' + ' ' + port +  '!'))
