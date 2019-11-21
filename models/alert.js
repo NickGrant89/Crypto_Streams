@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 // Notifications schema
 
-const NotificationsSchema = mongoose.Schema({
+const AlertSchema = mongoose.Schema({
     
     user:{
         type: String
@@ -16,4 +16,4 @@ const NotificationsSchema = mongoose.Schema({
 });
 
 
-let Notifications = module.exports = mongoose.model('Notifications', NotificationsSchema);
+let Alert = module.exports = mongoose.model('Alert', AlertSchema);

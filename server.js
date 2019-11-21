@@ -13,11 +13,11 @@ const helmet = require('helmet');
 
 // This calls the Device model to intergate the DB
 
-const ensureAuthenticated = require('./middleware/login-auth')
+const ensureAuthenticated = require('./middleware/login-auth');
+
+const checkAlerts = require('./middleware/check-alerts');
 
 let User = require('./models/user');
-
-let Notification = require('./models/notifications');
 
 let Relay = require('./models/relay');
 
@@ -91,24 +91,27 @@ app.get('*', function(req, res, next){
 })
 
 
-//GET display SB Admin page
+var getAlerts = function (req, res, next) {
+    req.getAlerts = Date.now()
+    next()
+}
 
-app.get('/', ensureAuthenticated, function(req, res){
+//app.use(checkAlerts)  
+
+//GET display SB Admin page
+app.get('/', ensureAuthenticated, checkAlerts, function(req, res){
     User.findById(req.user.id, function(err, users){
-        Notification.find({'user': users._id}, function(err, notification){
-            Notification.count({'user': users._id}, function(err, notificationcount){
-                Relay.find({'user': users._id}, function(err, relays){
-        res.render('index', {
-            title:'Dashboard',
-            users:users,
-            notification:notification,
-            notificationcount:notificationcount,
-            relays:relays,
-        });
-    });
-}); 
-}); 
-});            
+        Relay.find({'user': users._id}, function(err, relays){
+            console.log(req.alert);
+            res.render('index', {
+                title:'Dashboard',
+                users:users,
+                alert:req.alert,
+                alertcount:req.alertcount,
+                relays:relays,
+            });
+        }); 
+    });            
 });            
 
 
@@ -117,17 +120,20 @@ app.get('/', ensureAuthenticated, function(req, res){
 let users = require('./routes/users');
 let relays = require('./routes/relays');
 let auth = require('./routes/apiJWT');
+let alerts = require('./routes/alerts');
+
 
 //Display Routess
 
 app.use('/users', users);
 app.use('/relays', relays);
 app.use('/auth', auth);
+app.use('/alerts', alerts);
 
-app.use('*', function(req, res) {
+/* app.use('*', function(req, res) {
     res.status(404).end();
     res.redirect('/');
-}); 
+});  */
 
 
 const port = process.env.Port || 3000;

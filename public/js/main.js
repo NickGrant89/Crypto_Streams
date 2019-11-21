@@ -1,5 +1,4 @@
 //Reset streamkey
-
 $(document).ready(function(){
     $('.resetstreamkey').on('click', function(e){
         $target = $(e.target);
@@ -36,12 +35,48 @@ $(document).ready(function(){
         if(delDevice == true){
             $.ajax({
                 type:'DELETE',
-                url: '/users/deletealerts/'+id,
+                url: '/alerts/all/'+id,
                 success: function(response){
                  alert('Deleted');
                  window.location.href='/'
                  
                 },
+                statusCode: {
+                    200: function() {
+                        alert('Deleted');
+                        window.location.href='/'
+                        },
+                    },
+                error: function(err){
+                       console.log(err); 
+                }
+            });
+        }
+        else{
+           
+        }
+
+    });
+});
+
+//Delete single alert
+$(document).ready(function(){
+    $('.delAlert').on('click', function(e){
+        $target = $(e.target);
+        const id = $target.attr('data-id');
+        console.log(id);
+        var delDevice =  confirm('Are you sure you want to delete this alert?');
+        if(delDevice == true){
+            $.ajax({
+                type:'DELETE',
+                url: '/alerts/'+id,
+                
+                statusCode: {
+                    200: function() {
+                        alert('Deleted' );
+                        window.location.href='/alerts'
+                        },
+                    },
                 error: function(err){
                        console.log(err); 
                 }
@@ -77,12 +112,12 @@ $(document).ready(function(){
         $.ajax({
             type:'POST',
             data: dataJson,
-            url: 'http://rtmp.darkknight.co.uk:8888/api/relay/push',
+            url: 'https://rtmp.darkknight.co.uk:8443/api/relay/push',
             dataType: "json",
             contentType: "application/json",
             statusCode: {
             200: function() {
-                alert('Stream has been pushed, please wait!');
+                alert('Your stream has been pushed, please wait!');
                 window.location.href='/'
                 },
             },
@@ -116,54 +151,19 @@ $(document).ready(function(){
             $.ajax({
                 type:'POST',
                 data: dataJson,
-                url: '/users/addDest',
+                url: '/relays/addDest',
                 dataType: "json",
                 contentType: "application/json",
-                success: function(response){
-                    alert('Deleted');
-                    window.location.href='/'
-                   },
+                statusCode: {
+                    200: function() {
+                        alert('Destination Added');
+                        window.location.href='/'
+                        },
+                    },
+                
                    error: function(err){
                           console.log(err); 
                    },
-                
-            });
-        }
-        else{
-           
-        }
-  
-    });
-  });
-
-$(document).ready(function(){
-    $('.ytLive').on('click', function(){
-        var ytStreamkey = $("#ytStreamkey").val()
-        var streamKey = $("#streamkey").val()
-        var streamKey = relay.streamurl;
-        var ytStream =  confirm('Are you sure you want to go Live?');
-        var dataPush =  {
-          "app"        : "live",
-          "name"       : streamKey,
-          "vc"         : "libx264",
-          "ac"         : "aac",
-          "url"        : "rtmp://a.rtmp.youtube.com/live2/"+ytStreamkey,
-          "appendName" : false
-          }       
-        var dataJson = JSON.stringify(dataPush);
-        if(ytStream == true){
-            $.ajax({
-                type:'POST',
-                data: dataJson,
-                url: 'http://rtmp.darkknight.co.uk:8888/api/relay/push',
-                dataType: "json",
-                contentType: "application/json",
-                success: function(response,){
-                 alert(response);
-                },
-                error: function(err){
-                       console.log(err); 
-                },
                 
             });
         }
@@ -178,12 +178,9 @@ $(document).ready(function(){
 
   $(document).ready(function(){
     $('.editDest').on('click', function(e){
-        var relayId = $("#ytStreamkey").val()
         $target = $(e.target);
         const id = $target.attr('data-id');
-        //var ytStream =  confirm('Are you sure you want to go Live?');
-          
-        //var dataJson = JSON.stringify(dataPush);
+
             $.ajax({
                 type:'GET',
                 //data: dataJson,
@@ -191,7 +188,56 @@ $(document).ready(function(){
                 dataType: "json",
                 contentType: "application/json",
                 success: function(response){
-                 //alert(response.name);
+                 $("#relayId").val(response._id);
+                 $("#name").val(response.name);
+                 $("#streamUrl").val(response.streamurl);
+                },
+                error: function(err){
+                       console.log(err); 
+                },
+                
+            });
+     
+  
+    });
+  });
+
+  //get alerts and count
+  $(document).ready(function(){
+    const id = $target.attr('data-id');
+        $.ajax({
+            type:'GET',
+            //data: dataJson,
+            url: '/relays/'+id,
+            dataType: "json",
+            contentType: "application/json",
+            success: function(response){
+                $("#relayId").val(response._id);
+                $("#name").val(response.name);
+                $("#streamUrl").val(response.streamurl);
+            },
+            error: function(err){
+                    console.log(err); 
+            },
+            
+        });
+    
+
+
+  });
+
+  $(document).ready(function(){
+    $('.editDest').on('click', function(e){
+        $target = $(e.target);
+        const id = $target.attr('data-id');
+
+            $.ajax({
+                type:'GET',
+                //data: dataJson,
+                url: '/relays/'+id,
+                dataType: "json",
+                contentType: "application/json",
+                success: function(response){
                  $("#relayId").val(response._id);
                  $("#name").val(response.name);
                  $("#streamUrl").val(response.streamurl);
@@ -209,25 +255,24 @@ $(document).ready(function(){
   //Delete relay
   $(document).ready(function(){
     $('.delDest').on('click', function(e){
-        var relayId = $("#ytStreamkey").val()
         $target = $(e.target);
         const id = $target.attr('data-id');
         var ytStream =  confirm('Are you sure you want to delete relay?');
         if(ytStream == true){
             $.ajax({
                 type:'DELETE',
-                url: '/relays/delete/'+id,
+                url: '/relays/'+id,
                 dataType: "json",
                 contentType: "application/json",
                 statusCode: {
                     200: function() {
-                        alert('deleted');
-                        window.location.href='/'
+                        alert('Deleted!');
+                        window.location.href='/users/settings'
                         },
                     },
                 success: function(response){
                  alert('deleted');
-                 window.location.href='/'
+                 window.location.href='/settings'
                 },
                 error: function(err){
                        console.log(err); 
@@ -263,14 +308,64 @@ $(document).ready(function(){
                 contentType: "application/json",
                 statusCode: {
                     200: function() {
-                        alert('deleted');
-                        window.location.href='/'
+                        alert('Saved!');
+                        window.location.href='/users/settings'
                         },
                     },
-                success: function(response){
-                 alert('deleted');
-                 window.location.href='/'
+                
+                error: function(err){
+                       console.log(err); 
                 },
+                
+            });
+        }
+        else{
+           
+        }
+    });
+  });
+
+  // Save edited Relay  
+  $(document).ready(function(){
+    $('.saveUser').on('click', function(){
+        
+    var id = $("#id").val();
+    var firstname = $("#firstname").val();
+    var lastname = $("#lastname").val();
+    var phone = $("#phone").val();
+    var address = $("#address").val()
+    var address2 = $("#address2").val();
+    var city = $("#city").val();
+    var county = $("#county").val()
+    var postcode = $("#postcode").val();
+
+    var relaysave =  confirm('Are you sure you want to save?');
+        if(relaysave == true){
+            var dataPush =  {
+                "id" : id,
+                "firstname" : firstname,
+                "lastname"   : lastname,
+                "phone" : phone,
+                "address" : address,
+                "address2" : address2,
+                "city" : city,
+                "county" : county,
+                "postcode" : postcode,
+                }       
+              var dataJson = JSON.stringify(dataPush);
+              console.log(dataJson);
+            $.ajax({
+                type:'POST',
+                url: '/users/edit/'+id,
+                data:dataJson,
+                dataType: "json",
+                contentType: "application/json",
+                statusCode: {
+                    200: function() {
+                        alert('Saved!');
+                        window.location.href='/users/'+id
+                        },
+                    },
                 error: function(err){
                        console.log(err); 
                 },

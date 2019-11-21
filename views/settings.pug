@@ -15,13 +15,13 @@ block content
           .card-body
             ul.list-group
               each relay, i in relays
-                li.list-group-item 
+                li.list-group-item.clearfix
                   = relay.name
                   |   -   
                   = relay.streamurl
-          
-                  .btn.btn-primary.editDest(href='#editDest', data-toggle='modal', data-target='#editDest' data-id=relay._id)  Edit
-                  .btn.btn-danger.delDest(href='', data-toggle='modal', data-id=relay._id )  Delete
+                  .btn.btn-danger.delDest.img1(href='', data-toggle='modal', data-id=relay._id )  Delete 
+                  .btn.btn-primary.editDest.img1(href='#editDest', data-toggle='modal', data-target='#editDest' data-id=relay._id)  Edit    
+                    
 
             
 

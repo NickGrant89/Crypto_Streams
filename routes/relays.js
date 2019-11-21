@@ -14,7 +14,7 @@ router.get('/:id', ensureAuthenticated, function(req, res){
     Relay.findById(req.params.id, function(err, relay){
         //console.log(req.params.id);
         res.json(relay);
-        console.log(relay);
+        //console.log(relay);
     });
 });
 
@@ -22,7 +22,7 @@ router.get('/:id', ensureAuthenticated, function(req, res){
 router.delete('/:id' , ensureAuthenticated, (req, res) => {
 
     let query = {_id:req.params.id}
-    console.log(query);
+    //console.log(query);
 
     Relay.deleteOne(query, function(err){
          if(err){
@@ -43,7 +43,7 @@ router.delete('/:id' , ensureAuthenticated, (req, res) => {
 router.post('/addDest', ensureAuthenticated, (req, res) => {
     
     User.findOne({user:req.params.streamkey}, function(err, users){ 
-        console.log(users);
+        console.log(req.user);
 
     let relay = new Relay();
     relay.user = users._id;

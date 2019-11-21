@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  // Begin Page Content
+  .container-fluid
+    // Page Heading
+    .d-sm-flex.align-items-center.justify-content-between.mb-4
+      h1.h3.mb-0.text-gray-800 Dashboard
+    // Content Row
+    .row
+      .col-lg-12
+        // Basic Card Example
+        .card.shadow.mb-4
+          .card-header.py-3
+            h6.m-0.font-weight-bold.text-primary Notifications
+          .card-body
+            ul.list-group
+              each not, i in alert
+                li.list-group-item.clearfix 
+                  = not.datecreated + ' - ' + not.notification 
+                  .btn.btn-danger.delAlert.img1(href='', data-toggle='modal', data-id=not._id )  Delete 
+
+                 
+  // /.container-fluid
+  // End of Main Content

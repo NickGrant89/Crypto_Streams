@@ -11,8 +11,8 @@ const UserSchema = mongoose.Schema({
         type: String
     },
     name:{
-        firstname: String,
-        lastname: String
+        firstname: {type:String},
+        lastname: {type:String},
     },
     dateofbirth:{
         type: String
@@ -27,13 +27,12 @@ const UserSchema = mongoose.Schema({
         type: String
     },
     addressdetails:{
-        address: String,
-        address2: String,
-        city: String,
-        county: String,
-        postcode: String,
+        address:{type:String},
+        address2: {type:String},
+        city: {type:String},
+        county: {type:String},
+        postcode: {type:String},
     },
-    friends:[],
     streamkey:{type: String},
     createdate:{type: String},
     

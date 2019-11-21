@@ -11,44 +11,44 @@ block content
       .col-lg-12.mb-4
         .card.shadow.mb-4
           .card-header.py-3
-            h6.m-0.font-weight-bold.text-primary User Options
+            h6.m-0.font-weight-bold.text-primary User Details
           .card-body
             .row
               .col-lg-12.mb-2
                form
                 .form-row
+                  .form-group.col-md-12
+                    input.form-control(type='text', id="id" disabled hidden value=users._id)
                   .form-group.col-md-6
                     label(for='inputEmail4') First Name
-                    input#inputEmail4.form-control(name='first' type='first', value='')
+                    input.form-control(id='firstname' type='text', value=users.name.firstname)
                   .form-group.col-md-6
                     label(for='inputPassword4') Last Name
-                    input#inputPassword4.form-control(name='last' type='last', placeholder='')
+                    input.form-control(id='lastname' type='text', placeholder='' value=users.name.lastname)
                 .form-row
                   .form-group.col-md-6
                     label(for='inputEmail4') Email
-                    input#inputEmail4.form-control(name='email' type='email', placeholder='Email' disbale)
+                    input.form-control(id='email' type='email', placeholder='Email' disabled value=users.email)
                   .form-group.col-md-6
                     label(for='inputPassword4') Phone
-                    input#inputPassword4.form-control(name='phone' type='phone', placeholder='')    
+                    input.form-control(id='phone' type='text', placeholder='' value=users.phone)    
                 .form-group
                   label(for='inputAddress') Billing Address 
-                  input#inputAddress.form-control(name='address' type='address', placeholder='1234 Main St')
+                  input.form-control(id='address' type='text', placeholder='1234 Main St' value=users.addressdetails.address)
                 .form-group
                   label(for='inputAddress2') Address 2
-                  input#inputAddress2.form-control(name='address2' type='address2', placeholder='Apartment, studio, or floor')
+                  input.form-control(id='address2' type='text', placeholder='Apartment, studio, or floor' value=users.addressdetails.address2)
                 .form-row
                   .form-group.col-md-6
                     label(for='inputCity') City
-                    input#inputCity.form-control(type='text')
+                    input.form-control(id='city' type='text' value=users.addressdetails.city)
                   .form-group.col-md-4
                     label(for='inputState') County
-                    select#inputState.form-control
-                      option(selected='') Choose...
-                      option ...
+                    input.form-control(id='county' type='text' value=users.addressdetails.county)
                   .form-group.col-md-2
                     label(for='inputZip') Postcode
-                    input#inputZip.form-control(type='text')
-                button.btn.btn-primary(type='submit') Save  
+                    input.form-control(id='postcode' type='text' value=users.addressdetails.postcode)
+                button.btn.btn-primary.saveUser(type='button') Save  
 
   // /.container-fluid
   // End of Main Content

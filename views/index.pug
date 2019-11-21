@@ -38,7 +38,9 @@ block content
             h6.m-0.font-weight-bold.text-primary User Details
           .card-body
             ul Name:    
-              =user.name
+              =user.name.firstname
+              |       
+              =user.name.lastname
             ul Email:    
               =user.email  
             ul URL:    rtmp://rtmp.darkknight.co.uk/live  
