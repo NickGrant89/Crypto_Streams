@@ -13,9 +13,17 @@ const morgan = require('morgan');
 let User = require('../models/user');
 
 
-router.get('/helloworld', checkAuth, (req, res) => {
+router.get('/helloworld', (req, res) => {
     res.json({
         message: 'Hello World - Welcome to API Auth'
+    });
+});
+
+router.get('/getdata', (req, res) => {
+    
+    res.status(200).json({
+        url: 'http://127.0.0.1:8888/live/1t5DmFyo/index.m3u8'
+      
     });
 });
 

@@ -6,17 +6,18 @@ html(lang='en')
 		meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
 		meta(name='description', content='')
 		meta(name='author', content='')
-		title Streaming Dashboard
+		title My Streams Dashboard
 		// Custom fonts for this template
-		link(href='../vendor/fontawesome-free/css/all.min.css', rel='stylesheet', type='text/css')
+		link(href='/vendor/fontawesome-free/css/all.min.css', rel='stylesheet', type='text/css')
 		link(href='https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i', rel='stylesheet')
 		// Custom styles for this template
-		link(href='../css/sb-admin-2.min.css', rel='stylesheet')
+		link(href='../packages/core/main.css', rel='stylesheet')
+		link(href='../packages/list/main.css', rel='stylesheet')
+		link(href='/css/sb-admin-2.min.css', rel='stylesheet')
+		link(href='/css/style.css', rel='stylesheet')
 		link(href='https://fonts.googleapis.com/icon?family=Material+Icons', rel='stylesheet')
 		link(href='https://unpkg.com/video.js/dist/video-js.css', rel='stylesheet')
 		link(href='https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/css/bootstrap4-toggle.min.css', rel='stylesheet')
-
-
 		
 	body#page-top
 		// Page Wrapper
@@ -26,9 +27,9 @@ html(lang='en')
 				// Sidebar - Brand
 				a.sidebar-brand.d-flex.align-items-center.justify-content-center(href='/')
 					.sidebar-brand-icon.rotate-n-15
-						i.fas.fa-wrench
+						i.fas.fa-camera
 					.sidebar-brand-text.mx-3
-						| Enterprise
+						| My Streams
 				// Divider
 				hr.sidebar-divider.my-0
 				// Nav Item - Dashboard
@@ -38,19 +39,7 @@ html(lang='en')
 						span Dashboard
 				// Divider
 				hr.sidebar-divider
-				// Heading
 				
-				// Nav Item - Utilities Collapse Menu
-				li.nav-item
-					a.nav-link.collapsed(href='#', data-toggle='collapse', data-target='#collapseUtilities', aria-expanded='true', aria-controls='collapseUtilities')
-						i.fas.fa-fw.fa-building
-						span Menu
-					#collapseUtilities.collapse(aria-labelledby='headingUtilities', data-parent='#accordionSidebar')
-						.bg-white.py-2.collapse-inner.rounded
-							h6.collapse-header
-							a.collapse-item(href="/users") Users
-				// Divider
-				hr.sidebar-divider
 			// End of Sidebar
 			// Content Wrapper
 			#content-wrapper.d-flex.flex-column
@@ -61,7 +50,6 @@ html(lang='en')
 						// Sidebar Toggle (Topbar)
 						button#sidebarToggleTop.btn.btn-link.d-md-none.rounded-circle.mr-3
 							i.fa.fa-bars
-						
 						// Topbar Navbar
 						ul.navbar-nav.ml-auto
 							// Nav Item - Search Dropdown (Visible Only XS)
@@ -76,7 +64,31 @@ html(lang='en')
 											.input-group-append
 												button.btn.btn-primary(type='button')
 													i.fas.fa-search.fa-sm
+							// Nav Item - Alerts
+							li.nav-item.dropdown.no-arrow.mx-1
+								a#alertsDropdown.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+									i.fas.fa-bell.fa-fw
+									// Counter - Alerts
+									span.badge.badge-danger.badge-counter 
+										= alertcount
+								// Dropdown - Alerts
+								.dropdown-list.dropdown-menu.dropdown-menu-right.shadow.animated--grow-in(aria-labelledby='alertsDropdown')
+									h6.dropdown-header Alerts Center
+									each not, i in alert
+										a.dropdown-item.d-flex.align-items-center(href='#')
+											.mr-3
+												.icon-circle.bg-primary
+													i.fas.fa-bell
+											div
+												.small.text-gray-500 
+													= not.datecreated
+												span.font-weight-bold 
+													= not.notification
+									a.dropdown-item.text-center.small.text-gray-500(href='/alerts') Show All Alerts
+									a.dropdown-item.text-center.small.text-gray-500.delAllAlert( data-id=user._id) Clear All Alerts
+							
 
+					
 							// Nav Item - User Information
 							li.nav-item.dropdown.no-arrow
 								a#userDropdown.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
@@ -84,10 +96,10 @@ html(lang='en')
 									img.img-profile.rounded-circle(src='#')
 								// Dropdown - User Information
 								.dropdown-menu.dropdown-menu-right.shadow.animated--grow-in(aria-labelledby='userDropdown')
-									a.dropdown-item(href='#')
+									a.dropdown-item(href='/users/'+users.id)
 										i.fas.fa-user.fa-sm.fa-fw.mr-2.text-gray-400
 										|  Profile
-									a.dropdown-item(href='#')
+									a.dropdown-item(href='/users/settings')
 										i.fas.fa-cogs.fa-sm.fa-fw.mr-2.text-gray-400
 										|  Settings
 									.dropdown-divider
@@ -97,12 +109,12 @@ html(lang='en')
 					// End of Topbar
 					!= messages('message', locals)
 					block content
-	script(src='/js/main.js')
+	
 					// Footer
 					footer.sticky-footer.bg-white
 						.container.my-auto
 						.copyright.text-center.my-auto
-							span Copyright © portal.darkknight.co.uk 2019	
+							span Copyright © portal.mystreams.co.uk 2019	
 					// End of Footer
 					// End of Content Wrapper
 					// End of Page Wrapper
@@ -121,23 +133,32 @@ html(lang='en')
 				.modal-footer
 					button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
 					a.btn.btn-primary(href='/users/logout') Logout
-									
+	#goLive.modal.fade(tabindex='-1', role='dialog', aria-labelledby='goLiveLabel', aria-hidden='true')
+		.modal-dialog(role='document')
+			.modal-content
+				.modal-header
+					h5#goLiveLabel.modal-title Go Live
+					button.close(type='button', data-dismiss='modal', aria-label='Close')
+						span(aria-hidden='true')
+				.modal-body
+
+					input.btn.btn-primary(type='submit', value='Submit')
+					a.btn.btn-danger(href='/users/') Cancel
+
+					script(src='../packages/core/main.js')
+					script(src='../packages/list/main.js')
 					// Bootstrap core JavaScript
-					script(src='../vendor/jquery/jquery.min.js')
-					script(src='../vendor/bootstrap/js/bootstrap.bundle.min.js')
+					script(src='/vendor/jquery/jquery.min.js')
+					script(src='/vendor/bootstrap/js/bootstrap.bundle.min.js')
 					// Core plugin JavaScript
-					script(src='../vendor/jquery-easing/jquery.easing.min.js')
+					script(src='/vendor/jquery-easing/jquery.easing.min.js')
 					// Custom scripts for all pages
-					script(src='../js/sb-admin-2.min.js')
+					script(src='/js/sb-admin-2.min.js')
 					// Page level plugins
-					script(src='../vendor/chart.js/Chart.min.js')
+					script(src='/vendor/datatables/jquery.dataTables.min.js')
+					script(src='/vendor/datatables/dataTables.bootstrap4.min.js')
 					// Page level custom scripts
-					script(src='../js/demo/chart-area-demo.js')
-					script(src='../js/demo/chart-pie-demo.js')
-					// Page level plugins
-					script(src='../vendor/datatables/jquery.dataTables.min.js')
-					script(src='../vendor/datatables/dataTables.bootstrap4.min.js')
-					// Page level custom scripts
-					script(src='../js/demo/datatables-demo.js')
+					script(src='/js/demo/datatables-demo.js')
+					script(src='/js/main.js')
 					script(src='https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js')
-					
+								

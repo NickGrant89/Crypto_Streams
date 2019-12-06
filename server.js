@@ -1,7 +1,6 @@
 //Using modual
 
 const morgan = require('morgan'); // Console Logger
-const Joi = require('joi');  // Joi is a validator, making code smaller//
 const express = require('express'); // Express Framework
 const path = require('path');
 const bodyParser = require('body-parser')
@@ -9,38 +8,23 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const config = require('./config/database')
 const passport = require('passport');
-const fs = require('fs');
+const MongoStore = require('connect-mongo')(session);
 
 const helmet = require('helmet');
 
-/* //Write "Hello" every 500 milliseconds:
-var myInt = setInterval(function () {
-    User.find({}, 'stream streamkey facebookkey youtubekey', function(err, users){
-        // write to a new file named 2pac.txt
-        fs.writeFile('./stream.txt', users, (err) => {  
-            // throws an error, you could also catch it here
-            if (err) throw err;
-
-            // success case, the file was saved
-            console.log('Lyric saved!');
-        });
-        //console.log("Hello" + users);
-    });
-    //console.log("Hello");
-}, 5000); */
-
 // This calls the Device model to intergate the DB
 
-const ensureAuthenticated = require('./middleware/login-auth')
+const ensureAuthenticated = require('./middleware/login-auth');
+
+const checkAlerts = require('./middleware/check-alerts');
 
 let User = require('./models/user');
 
-
-
+let Relay = require('./models/relay');
 
 // Call Moongoose connection
 const mongoose = require('mongoose');
-mongoose.connect(config.database,{ useNewUrlParser: true });
+mongoose.connect(config.database,{ useNewUrlParser: true, useUnifiedTopology: true  });
 
 // Starting DB connection
 
@@ -76,16 +60,18 @@ app.use(bodyParser.json())
 
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use(express.static(path.join(__dirname, 'NewSB')))
-
 app.use('/uploads', express.static('uploads'));
+
 
 //Express session Middleware
 
+app.set('trust proxy', 1) // trust first proxy
 app.use(session({
-    secret: 'keyboard cat',
+    secret: 'Fam!lyGuy2o19',
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    store: new MongoStore({mongooseConnection: mongoose.connection, 
+                            ttl: 1 * 24 * 60 * 60 })
   }));
 
   //Express message middleware
@@ -109,60 +95,50 @@ app.get('*', function(req, res, next){
 })
 
 
+var getAlerts = function (req, res, next) {
+    req.getAlerts = Date.now()
+    next()
+}
+
+//app.use(checkAlerts)  
+
 //GET display SB Admin page
-
-app.get('/', ensureAuthenticated, function(req, res){
-    User.findById(req.user.id, function(err, user){
-       /*  if(user.admin == 'Super Admin'){
-           return res.redirect('/admin/dashboard')
-        }  */
-        //console.log(user)
-
-        User.find({}, function(err, users){
-            
-                        User.countDocuments({'company': user.company}, function(err, numOfUsers) {
-                            if(err){
-                                console.log(err)
-                            }
-                            else{
-                                res.render('index', {
-                                    title:'Dashboard',
-                                    users:users,
-                                    numOfUsers:numOfUsers,
-                                });
-                            }
-                        });        
-                    });  
-                });
+app.get('/', ensureAuthenticated, checkAlerts, function(req, res){
+    User.findById(req.user.id, function(err, users){
+        Relay.find({'user': users._id}, function(err, relays){
+            console.log(req.alert);
+            res.render('index', {
+                title:'Dashboard',
+                users:users,
+                alert:req.alert,
+                alertcount:req.alertcount,
+                relays:relays,
             });
-        
-
+        }); 
+    });            
+});            
 
 
 // Route File
 
-//API Routes
-
 let users = require('./routes/users');
 let relays = require('./routes/relays');
+let auth = require('./routes/apiJWT');
+let alerts = require('./routes/alerts');
 
 
-//Display Routes
-
-
-let admin = require('./routes/admin');
-
+//Display Routess
 
 app.use('/users', users);
 app.use('/relays', relays);
-
-
-app.use('/admin', admin);
+app.use('/auth', auth);
+app.use('/alerts', alerts);
 
 /* app.use('*', function(req, res) {
     res.status(404).end();
     res.redirect('/');
 });  */
+
 
 const port = process.env.Port || 3000;
 
