@@ -37,8 +37,8 @@ $(document).ready(function(){
                 type:'DELETE',
                 url: '/alerts/all/'+id,
                 success: function(response){
-                 alert('Deleted');
-                 window.location.href='/'
+                 //alert('Deleted');
+                 //window.location.href='/'
                  
                 },
                 statusCode: {
@@ -112,7 +112,7 @@ $(document).ready(function(){
         $.ajax({
             type:'POST',
             data: dataJson,
-            url: 'https://rtmp.darkknight.co.uk:8443/api/relay/push',
+            url: 'https://rtmp.mystreams.co.uk:8443/api/relay/push',
             dataType: "json",
             contentType: "application/json",
             statusCode: {

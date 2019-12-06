@@ -15,7 +15,7 @@ block content
             h6.m-0.font-weight-bold.text-primary Video
           .card-body
             video-js#my_video_2.vjs-default-skin.vjs-big-play-centered.vjs-16-9(controls='', preload='auto', width='500', height='300', poster='/img/decks.png')
-              source(src='http://rtmp.darkknight.co.uk:8888/live/' + user.streamkey + '/index.m3u8', type='application/x-mpegURL')
+              source(src='https://rtmp.mystreams.co.uk:8443/live/' + user.streamkey + '/index.m3u8', type='application/x-mpegURL')
             script(src='https://unpkg.com/video.js/dist/video.js')
             script(src='https://unpkg.com/@videojs/http-streaming/dist/videojs-http-streaming.js')
             script.
@@ -43,7 +43,7 @@ block content
               =user.name.lastname
             ul Email:    
               =user.email  
-            ul URL:    rtmp://rtmp.darkknight.co.uk/live  
+            ul URL:    rtmp://rtmp.mystreams.co.uk/live  
               
             ul Stream Key:    
               =user.streamkey 

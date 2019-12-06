@@ -15,13 +15,14 @@ let Relay = require('../models/relay');
 //List all alerts
 router.get('/', ensureAuthenticated, checkAlerts, function(req, res){
     User.findById(req.user.id, function(err, users){
-
-                res.render('alerts',{
-                title:'Alerts', 
-                users:users, 
-                alert:req.alert,
-                alertcount:req.alertcount, 
-                });
+        //console.log(req)
+        res.render('alerts',{
+        title:'Alerts', 
+        users:users, 
+        alert: req.alert,
+        alerts: req.allalerts,
+        alertcount:req.alertcount, 
+        });
     });
 });
 

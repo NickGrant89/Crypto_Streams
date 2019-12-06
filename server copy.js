@@ -140,6 +140,6 @@ app.use('/alerts', alerts);
 });  */
 
 
-const port = process.env.Port || 3000;
+const port = process.env.Port || 3011;
 
-app.listen(port, process.env.IP || '192.168.178.23', () => console.log('Example app listening on port' + ' ' + port +  '!'))
+app.listen(port, process.env.IP || '10.30.0.152', () => console.log('Example app listening on port' + ' ' + port +  '!'))

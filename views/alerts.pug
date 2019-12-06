@@ -15,10 +15,10 @@ block content
             h6.m-0.font-weight-bold.text-primary Notifications
           .card-body
             ul.list-group
-              each not, i in alert
+              each alertl, i in alerts
                 li.list-group-item.clearfix 
-                  = not.datecreated + ' - ' + not.notification 
-                  .btn.btn-danger.delAlert.img1(href='', data-toggle='modal', data-id=not._id )  Delete 
+                  = alertl.datecreated + ' - ' + alertl.notification 
+                  .btn.btn-danger.delAlert.img1(href='', data-toggle='modal', data-id=alertl._id )  Delete 
 
                  
   // /.container-fluid
