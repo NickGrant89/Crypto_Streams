@@ -3,6 +3,8 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const shortid = require('shortid');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 
 //Passport Config
 require('../config/passport')(passport);
@@ -33,7 +35,7 @@ router.get('/', ensureAuthenticated, checkAlerts, function(req, res){
  
 //Edit User Profile
 router.post('/edit/:id',  (req, res) => {
-    console.log(req.body);
+    //console.log(req.body);
 
     var user = {
         name:{
@@ -75,13 +77,151 @@ router.get('/login', function(req, res){
 
 })
 
+//password reset form
+router.get('/passwordreset', function(req, res){
+    res.render('passwordreset', {title:'Login'});
 
+})
+
+
+//password reset form
+router.post('/passwordreset', function(req, res){
+    if(req.body.email === ' '){
+        req.flash('danger', 'error');
+        res.redirect('/users/passwordreset');
+    }
+    User.findOne({email: req.body.email}, function(err, user){
+        if(user === null || err){
+            req.flash('danger', err);
+            res.redirect('/users/passwordreset');
+        };
+        console.error(user)
+        if(user === null){
+            //req.flash('danger', 'error');
+            //res.redirect('/users/passwordreset');
+        }
+        else{
+            const token = crypto.randomBytes(20).toString('hex');
+            var resetDetails = {
+                resetPasswordToken: token,
+                resetPasswordExpiers: Date.now() + 3600000,
+            };
+
+            User.updateOne({_id:user._id}, resetDetails, function(err){
+                if(err){
+                    console.log(err);
+                    return;
+                }
+                else{
+                    //res.redirect('/')
+                    //res.send('Success');
+                    
+                }
+           });
+
+            const transporter = nodemailer.createTransport({
+                service: '',
+                host: 'mail.mystreams.co.uk',
+                port:'465',
+                secure: 'true',
+                auth: {
+                    user: 'hello@mystreams.co.uk',
+                    pass: 'Bea27yee1989.',
+                },
+            });
+
+            const mailOptions = {
+                from: 'hello@mystreams.co.uk',
+                to: user.email,
+                subject: 'Link to Password Reset',
+                text: 'http://192.168.178.23:3000/users/reset/'+ token,
+            };
+
+            console.log('sending mail');
+
+            transporter.sendMail(mailOptions, (err, responce) => {
+                if(err){
+                    req.flash('danger', err);
+                    res.redirect('/users/passwordreset');
+                    console.error('there was an error', err);
+                }else{
+                    console.log('here is the res:', responce);
+                    req.flash('recovery sent');
+                    res.redirect('/users/passwordreset');
+                }
+            });
+        }
+    });
+})
+
+
+//Reset password
+router.get('/reset/:id', function(req, res){
+    console.log(req.params.id);
+    User.findOne({resetPasswordToken: req.params.id}, function(err, user){
+        console.log(user);
+        if(user === null){
+            res.redirect('/');
+        }
+        else{
+            if(user.resetPasswordExpiers > Date.now()){
+                console.log(true);
+                res.render('passwordresetnow', {email:user.email});
+            }
+            else{
+                console.log(false);
+                req.flash('danger', 'password reset link is invalid or had expired!')
+                res.redirect('/')
+            }
+        }
+        
+        
+    });
+});
+
+//Password Reset
+router.post('/passwordresetnow', function(req, res){
+    User.findOne({email: req.body.email}, function(err, user){
+        console.log(req.body.email);
+        if(err || user == null){
+            res.redirect('/');
+        }
+        else{
+            
+            bcrypt.genSalt(10, function(errors, salt){
+                bcrypt.hash(req.body.password, salt, function(err, hash){
+                    if(errors){
+                        console.log(err);
+                    }else{
+                        //user.password = hash;
+                        var password = {
+                            password: hash,
+                            resetPasswordToken: null,
+                            resetPasswordExpiers: null,
+                        }
+                        //console.log(hash)
+                        User.updateOne({_id:user._id}, password, function(err){
+                            if(err){
+                                console.log(err);
+                                return;
+                            }
+                            else{
+                                res.redirect('/')
+                                
+                            }
+                        });
+                    }
+                });
+            });    
+        }
+    });
+});
 
 //Register form
 router.get('/register', function(req, res){
     res.render('register', {title:'Register'});
-
-})
+    
+});
 
 //Settings Form
 router.get('/settings', ensureAuthenticated, checkAlerts, function(req, res){
