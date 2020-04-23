@@ -1,3 +1,5 @@
+
+
 //Reset streamkey
 $(document).ready(function(){
     $('.resetstreamkey').on('click', function(e){
@@ -112,7 +114,7 @@ $(document).ready(function(){
         $.ajax({
             type:'POST',
             data: dataJson,
-            url: 'https://rtmp.mystreams.co.uk:8443/api/relay/push',
+            url: 'http://rtmp.mystreams.co.uk:8443/api/relay/push',
             dataType: "json",
             contentType: "application/json",
             statusCode: {

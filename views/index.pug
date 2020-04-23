@@ -6,6 +6,8 @@ block content
     // Page Heading
     .d-sm-flex.align-items-center.justify-content-between.mb-4
       h1.h3.mb-0.text-gray-800 Dashboard
+      // Your customer chat code
+      .fb-customerchat(attribution='setup_tool', page_id='108189904013834', theme_color='#0084ff') 
     // Content Row
     .row
       .col-lg-7  
@@ -30,7 +32,7 @@ block content
               else{
               player.play();
               }
-              })
+              }) 
       .col-lg-5 
         // Basic Card Example
         .card.shadow.mb-4
@@ -49,21 +51,12 @@ block content
               =user.streamkey 
               |     
               .btn.btn-primary.resetstreamkey(data-id=user.id, ) Reset Key
-            ul Last Stream :    
+            ul Last Connected:    
+              =user.lastconnected
           input.btn.btn-primary(href='#addUser', data-toggle='modal', data-target='#addUser' value='Show Time' disabled hidden) 
           .btn.btn-primary(href='#addDest', data-toggle='modal', data-target='#addDest' value='Push Live Stream')  Add Destination
           br 
           .btn.btn-primary(href='#pushStream', data-toggle='modal', data-target='#pushStream' value='Push Live Stream')  Push Live Stream
-
-    // Content Row
-    .row
-      .col-lg-12
-        // Basic Card Example
-        .card.shadow.mb-4
-          .card-header.py-3
-            h6.m-0.font-weight-bold.text-primary Analytics
-          .card-body
-            h1 Coming Soon
                  
   // /.container-fluid
   // End of Main Content

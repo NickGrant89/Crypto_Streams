@@ -102,6 +102,9 @@ html(lang='en')
 									a.dropdown-item(href='/users/settings')
 										i.fas.fa-cogs.fa-sm.fa-fw.mr-2.text-gray-400
 										|  Settings
+									a.dropdown-item(href='#')
+										i.fas.fa-cogs.fa-sm.fa-fw.mr-2.text-gray-400
+										|  Invoices	
 									.dropdown-divider
 									a.dropdown-itema(href='#', data-toggle='modal', data-target='#logoutModal')
 										i.fas.fa-sign-out-alt.fa-sm.fa-fw.mr-2.text-gray-400
@@ -161,4 +164,19 @@ html(lang='en')
 					script(src='/js/demo/datatables-demo.js')
 					script(src='/js/main.js')
 					script(src='https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js')
-								
+					// Load Facebook SDK for JavaScript
+					#fb-root
+					script.
+						window.fbAsyncInit = function() {
+						FB.init({
+						xfbml            : true,
+						version          : 'v5.0'
+						});
+						};
+						(function(d, s, id) {
+						var js, fjs = d.getElementsByTagName(s)[0];
+						if (d.getElementById(id)) return;
+						js = d.createElement(s); js.id = id;
+						js.src = 'https://connect.facebook.net/en_GB/sdk/xfbml.customerchat.js';
+						fjs.parentNode.insertBefore(js, fjs);
+						}(document, 'script', 'facebook-jssdk'));
