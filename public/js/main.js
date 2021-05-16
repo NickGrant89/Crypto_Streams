@@ -379,3 +379,45 @@ $(document).ready(function(){
         }
     });
   });
+
+//Go Live
+
+$(document).ready(function(){
+    $('.goLive').on('click', function(){
+        var title = $("#title").val();
+        var description = $("#description").val();
+        var streamkey = $("#userStreamKey").val();
+        var pushStream =  confirm('Are you sure you want to GO LIVE?');
+        var dataPush =  {
+          "title"       : title,
+          "description"  : description,
+          "streamkey"  : streamkey,
+          }       
+        var dataJson = JSON.stringify(dataPush);
+        console.log(dataPush);
+        if(pushStream == true){
+            $.ajax({
+                type:'POST',
+                data: dataJson,
+                url: '/posts/golive',
+                dataType: "json",
+                contentType: "application/json",
+                statusCode: {
+                    200: function() {
+                        alert('You are Live');
+                        window.location.href='/'
+                        },
+                    },
+                
+                   error: function(err){
+                          console.log(err); 
+                   },
+                
+            });
+        }
+        else{
+           
+        }
+  
+    });
+  });

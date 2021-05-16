@@ -125,6 +125,7 @@ let users = require('./routes/users');
 let relays = require('./routes/relays');
 let auth = require('./routes/apiJWT');
 let alerts = require('./routes/alerts');
+let posts = require('./routes/posts');
 
 
 //Display Routess
@@ -133,6 +134,7 @@ app.use('/users', users);
 app.use('/relays', relays);
 app.use('/auth', auth);
 app.use('/alerts', alerts);
+app.use('/posts', posts);
 
 /* app.use('*', function(req, res) {
     res.status(404).end();
@@ -142,4 +144,4 @@ app.use('/alerts', alerts);
 
 const port = process.env.Port || 3000;
 
-app.listen(port, process.env.IP || '192.168.178.23', () => console.log('Example app listening on port' + ' ' + port +  '!'))
+app.listen(port, process.env.IP || '192.168.178.120', () => console.log('Example app listening on port' + ' ' + port +  '!'))
